@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="referrer" content="no-referrer" />
@@ -8,27 +7,254 @@
   <meta http-equiv="X-Content-Type-Options" content="nosniff" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="shortcut icon" id="tab-favicon" href="favicon.png" />
-  <title id="t">Home</title>
+  <title id="t">Borealis Settings</title>
   <link rel="stylesheet" id="global" href="/assets/css/global.css?v=6" />
   <link rel="stylesheet" href="/assets/css/container.css?v=2" />
   <link rel="stylesheet" href="/assets/css/nav.css?v=01" />
   <link rel="stylesheet" href="/assets/css/settings.css?v=06" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6840529569014734"
-    crossorigin="anonymous"></script>
 
+  <style>
+    :root {
+      --aurora-bg: #050812;
+      --aurora-panel: rgba(12, 18, 31, .72);
+      --aurora-panel-strong: rgba(10, 15, 27, .9);
+      --aurora-border: rgba(137, 211, 255, .16);
+      --aurora-text: #eef7ff;
+      --aurora-muted: #91a4b8;
+      --aurora-blue: #63b3ff;
+      --aurora-purple: #a78bfa;
+      --aurora-cyan: #61e7d8;
+      --aurora-glow: rgba(99, 179, 255, .28);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      color: var(--aurora-text);
+      font-family: Inter, "Segoe UI", system-ui, sans-serif;
+      background:
+        radial-gradient(900px 500px at 15% 5%, rgba(70, 170, 255, .14), transparent 65%),
+        radial-gradient(850px 500px at 85% 10%, rgba(170, 100, 255, .13), transparent 65%),
+        radial-gradient(700px 500px at 50% 100%, rgba(55, 220, 190, .08), transparent 70%),
+        var(--aurora-bg);
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: -20%;
+      z-index: -1;
+      pointer-events: none;
+      background:
+        linear-gradient(115deg, transparent 25%, rgba(73, 205, 255, .035) 45%, rgba(174, 111, 255, .06) 55%, transparent 75%);
+      filter: blur(35px);
+      transform: rotate(-7deg);
+      animation: auroraDrift 14s ease-in-out infinite alternate;
+    }
+
+    @keyframes auroraDrift {
+      from { transform: translate3d(-2%, -1%, 0) rotate(-7deg) scale(1); }
+      to { transform: translate3d(2%, 2%, 0) rotate(-3deg) scale(1.08); }
+    }
+
+    .f-nav {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      min-height: 64px;
+      background: rgba(5, 8, 18, .72);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--aurora-border);
+      box-shadow: 0 8px 30px rgba(0,0,0,.24);
+    }
+
+    .main { min-height: calc(100vh - 64px); }
+
+    .settings-container {
+      width: min(1180px, 100%);
+      margin: 0 auto;
+      padding: 44px 24px 70px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+      gap: 18px;
+    }
+
+    .settings-card {
+      width: auto;
+      padding: 24px;
+      border: 1px solid var(--aurora-border);
+      border-radius: 18px;
+      background: linear-gradient(145deg, rgba(18, 28, 47, .78), rgba(8, 13, 25, .7));
+      box-shadow:
+        0 18px 50px rgba(0,0,0,.25),
+        inset 0 1px 0 rgba(255,255,255,.035);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease;
+    }
+
+    .settings-card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(99,179,255,.3);
+      box-shadow:
+        0 20px 55px rgba(0,0,0,.3),
+        0 0 30px rgba(99,179,255,.05);
+    }
+
+    .settings-card h3 {
+      margin: 0 0 9px;
+      color: #f4f9ff;
+      font-size: 1.08rem;
+      letter-spacing: .1px;
+    }
+
+    .settings-card p {
+      margin: 0 0 14px;
+      color: var(--aurora-muted);
+      line-height: 1.55;
+      font-size: .9rem;
+      text-align: left;
+    }
+
+    .settings-card a { color: var(--aurora-blue); }
+
+    .key-form,
+    .settings-card input[type="text"],
+    .settings-card select {
+      width: 100%;
+      height: 46px;
+      margin-top: 9px;
+      padding: 0 14px;
+      border: 1px solid rgba(137,211,255,.12);
+      border-radius: 11px;
+      outline: none;
+      color: var(--aurora-text);
+      background: rgba(3, 8, 18, .58);
+      font-size: .92rem;
+      transition: border-color .2s ease, box-shadow .2s ease, background .2s ease;
+    }
+
+    .settings-card input[type="text"]:focus,
+    .settings-card select:focus {
+      border-color: rgba(99,179,255,.48);
+      box-shadow: 0 0 0 3px rgba(99,179,255,.09);
+      background: rgba(4, 10, 22, .78);
+    }
+
+    .settings-card select option {
+      background: #0b1220;
+      color: #eef7ff;
+    }
+
+    .key-button,
+    .settings-card button {
+      width: auto;
+      min-width: 120px;
+      height: 43px;
+      margin: 10px 7px 0 0;
+      padding: 0 17px;
+      border: 1px solid rgba(99,179,255,.18);
+      border-radius: 11px;
+      color: #f4f9ff;
+      background: linear-gradient(135deg, rgba(72,146,225,.25), rgba(140,94,225,.2));
+      cursor: pointer;
+      font-size: .88rem;
+      font-weight: 600;
+      transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
+    }
+
+    .key-button:hover,
+    .settings-card button:hover {
+      transform: translateY(-1px);
+      border-color: rgba(99,179,255,.45);
+      box-shadow: 0 8px 25px rgba(57,130,215,.13);
+    }
+
+    #buttonLayer {
+      width: auto;
+      display: flex;
+      gap: 8px;
+    }
+
+    #buttonLayer > .key-button { flex: 1; }
+
+    #ab-settings {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      margin-top: 12px;
+    }
+
+    #ab-settings-container { margin: 0; }
+
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 54px;
+      height: 30px;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider-round {
+      position: absolute;
+      inset: 0;
+      cursor: pointer;
+      border-radius: 30px;
+      background: rgba(120,140,165,.25);
+      border: 1px solid rgba(255,255,255,.1);
+      transition: .25s;
+    }
+
+    .slider-round::before {
+      content: "";
+      position: absolute;
+      width: 22px;
+      height: 22px;
+      left: 3px;
+      top: 3px;
+      border-radius: 50%;
+      background: #dcecff;
+      box-shadow: 0 2px 8px rgba(0,0,0,.3);
+      transition: .25s;
+    }
+
+    input:checked + .slider-round {
+      background: linear-gradient(90deg, rgba(79,181,255,.75), rgba(157,105,246,.75));
+      box-shadow: 0 0 18px rgba(99,179,255,.18);
+    }
+
+    input:checked + .slider-round::before { transform: translateX(24px); }
+
+    #warning { color: #ff8c9b; }
+
+    @media (max-width: 700px) {
+      .settings-container {
+        grid-template-columns: 1fr;
+        padding: 28px 14px 50px;
+      }
+    }
+  </style>
 </head>
 
 <body>
   <div class="f-nav"></div>
+
   <div class="main">
     <div class="settings-container">
+
       <div class="settings-card">
         <h3>About:Blank</h3>
-        <p>
-          Cloak the site in an about:blank page and toggle about:blank on
-          startup (enabled by default)
-        </p>
+        <p>Cloak the site in an about:blank page and toggle about:blank on startup.</p>
         <div id="ab-settings">
           <div id="ab-settings-container">
             <label class="switch">
@@ -39,21 +265,17 @@
           <button onclick="AB()" class="key-button">Open Popup</button>
         </div>
       </div>
+
       <div class="settings-card">
         <h3>Set Panic Key</h3>
-        <p>
-          Quick open another site with one press. Used for redirects when
-          about:blank is opened. For multiple key strokes separate them with a
-          comma. Ex. "A,B,C"
-        </p>
+        <p>Quickly open another site with one press. Separate multiple key strokes with commas.</p>
         <input type="text" id="eventKeyInput" placeholder="Panic Keys (comma separated)" class="key-form" />
-        <input class="key-form" placeholder="Panic Link" type="text" id="linkInput" value />
-        <button class="key-button" value="Save" onclick="saveEventKey()">
-          Save
-        </button>
+        <input class="key-form" placeholder="Panic Link" type="text" id="linkInput" />
+        <button class="key-button" value="Save" onclick="saveEventKey()">Save</button>
       </div>
+
       <div class="settings-card">
-        <h3>&#84;&#97;&#98;&#32;&#67;&#108;&#111;&#97;&#107;&#101;&#114;</h3>
+        <h3>Tab Cloaker</h3>
         <p>Change the title and icon of the page.</p>
         <select id="dropdown" onchange="handleDropdownChange(this)">
           <option value="Classroom">Default</option>
@@ -80,75 +302,44 @@
           <option value="Britannica">Britannica</option>
           <option value="Ducksters">Ducksters</option>
           <option value="Minga">Minga</option>
-          <option value="i-Ready Learning Games">
-            i-Ready Learning Games
-          </option>
+          <option value="i-Ready Learning Games">i-Ready Learning Games</option>
           <option value="NoRedInk Home">NoRedInk Home</option>
           <option value="Newsela Binder">Newsela Binder</option>
           <option value="Newsela Assignments">Newsela Assignments</option>
           <option value="Newsela Home">Newsela Home</option>
           <option value="PowerSchool Sign In">PowerSchool Sign In</option>
-          <option value="PowerSchool Grades and Attendance">
-            PowerSchool Grades and Attendance
-          </option>
-          <option value="PowerSchool Teacher Comments">
-            PowerSchool Teacher Comments
-          </option>
-          <option value="PowerSchool Standards Grades">
-            PowerSchool Standards Grades
-          </option>
-          <option value="PowerSchool Attendance">
-            PowerSchool Attendance
-          </option>
+          <option value="PowerSchool Grades and Attendance">PowerSchool Grades and Attendance</option>
+          <option value="PowerSchool Teacher Comments">PowerSchool Teacher Comments</option>
+          <option value="PowerSchool Standards Grades">PowerSchool Standards Grades</option>
+          <option value="PowerSchool Attendance">PowerSchool Attendance</option>
           <option value="Nearpod">Nearpod</option>
           <option value="StudentVUE">StudentVUE</option>
           <option value="Quizlet Home">Quizlet Home</option>
-          <option value="Google Forms Locked Mode">
-            Google Forms - Locked Mode
-          </option>
+          <option value="Google Forms Locked Mode">Google Forms - Locked Mode</option>
           <option value="DeltaMath">DeltaMath</option>
           <option value="Kami">Kami</option>
-          <option value="GoGuardian Admin Restricted">
-            GoGuardian Admin Block
-          </option>
-          <option value="GoGuardian Teacher Block">
-            GoGuardian Teacher Block
-          </option>
-          <option value="World History Encyclopedia">
-            World History Encyclopedia
-          </option>
+          <option value="GoGuardian Admin Restricted">GoGuardian Admin Block</option>
+          <option value="GoGuardian Teacher Block">GoGuardian Teacher Block</option>
+          <option value="World History Encyclopedia">World History Encyclopedia</option>
           <option value="Big Ideas Math">Big Ideas Math</option>
-          <option value="Big Ideas Math Assignment Player">
-            Big Ideas Math Assignment Player
-          </option>
+          <option value="Big Ideas Math Assignment Player">Big Ideas Math Assignment Player</option>
           <option value="Savvas Realize">Savvas Realize</option>
           <option value="SmartPass">SmartPass</option>
-          <option value="World Book Online - Super Home">
-            World Book Online (Super Home)
-          </option>
-          <option value="World Book Online - Student">
-            World Book Online (Student)
-          </option>
-          <option value="World Book Online - Timelines">
-            World Book Online (Timelines)
-          </option>
+          <option value="World Book Online - Super Home">World Book Online (Super Home)</option>
+          <option value="World Book Online - Student">World Book Online (Student)</option>
+          <option value="World Book Online - Timelines">World Book Online (Timelines)</option>
           <option value="Naviance">Naviance Student</option>
           <option value="PBS Learning Media">PBS Learning Media</option>
-          <option value="PBS Learning Media Student Home">
-            PBS Learning Media Student Home
-          </option>
+          <option value="PBS Learning Media Student Home">PBS Learning Media Student Home</option>
           <option value="Dictionary">Dictionary.com</option>
           <option value="Thesaurus">Thesaurus.com</option>
         </select>
         <div id="buttonLayer">
-          <button class="key-button" value="Save" onclick="CustomIcon(); CustomName(); redirectToMainDomain();">
-            Save
-          </button>
-          <button class="key-button" value="Reset" onclick="ResetCustomCloak(); redirectToMainDomain();">
-            Reset Cloak
-          </button>
+          <button class="key-button" onclick="CustomIcon(); CustomName(); redirectToMainDomain();">Save</button>
+          <button class="key-button" onclick="ResetCustomCloak(); redirectToMainDomain();">Reset Cloak</button>
         </div>
       </div>
+
       <div class="settings-card">
         <h3>Set Background Image</h3>
         <p>Change the site's background image.</p>
@@ -156,6 +347,7 @@
         <button class="key-button" id="save-button">Save</button>
         <button class="key-button" id="reset-button">Reset</button>
       </div>
+
       <div class="settings-card">
         <h3>Search Engine</h3>
         <p>Change the search engine when searching.</p>
@@ -169,77 +361,63 @@
           <option value="Ecosia">Ecosia</option>
         </select>
         <input class="key-form" type="text" id="engine-form" placeholder="Change Search Engine" name="engine" />
-        <button class="key-button" value="Save" onclick="SaveEngine();">
-          Save
-        </button>
+        <button class="key-button" onclick="SaveEngine()">Save</button>
       </div>
+
       <div class="settings-card">
-        <h3>Choose your <an>Pro</an>xy</h3>
-        <p>
-          Choose the <an>pro</an>xy you want to use.
-        </p>
+        <h3>Choose your Proxy</h3>
+        <p>Choose the proxy you want to use.</p>
         <select id="pChange">
-          <option value="sj">Scram<an>jet</an> (Default)</option>
-          <option value="uv">Ultra<an>vio</an>let (Legacy)</option>
+          <option value="sj">Scramjet (Default)</option>
+          <option value="uv">Ultraviolet (Legacy)</option>
           <option value="dy">Dynamic (Doesn't work in about:blank)</option>
         </select>
       </div>
+
       <div class="settings-card">
         <h3>Particles</h3>
-        <p>
-          Add the particles that are from the previous version to the new
-          site.
-        </p>
+        <p>Add the particles from the previous version to the site.</p>
         <label class="switch">
           <input type="checkbox" class="slider-checkbox" id="2" />
           <span class="slider-round"></span>
         </label>
       </div>
+
       <div class="settings-card">
-        <h3>Themes!</h3>
-        <p>Pick from a variety of themes to customize your experience.</p>
-        <select placeholder="Solid Color Themes" id="dropdown" class="td" onchange="themeChange(this)">
-          <option disabled selected>Solid Color Themes</option>
-          <option value="d">Default</option>
+        <h3>Appearance</h3>
+        <p>Choose the visual theme for Borealis.</p>
+        <select id="dropdown" class="td" onchange="themeChange(this)">
+          <option value="d">Aurora</option>
           <option value="Inverted">Inverted</option>
           <option value="sky">Sky</option>
-          <option disabled selected>Catppuccin Themes</option>
           <option value="catppuccinMocha">Mocha</option>
           <option value="catppuccinMacchiato">Macchiato</option>
           <option value="catppuccinFrappe">Frappe</option>
           <option value="catppuccinLatte">Latte</option>
-          <option disabled selected>Custom Themes</option>
         </select>
       </div>
+
       <div class="settings-card">
         <h3>Save Data Management</h3>
-        <p>Export your saved data on this site and import it on another site.
-          This is useful because this site might be blocked in the future,
-          but you don't want to lose your save data.
-        </p>
+        <p>Export your saved data and import it on another site.</p>
         <p id="warning">Importing a save file will overwrite your current saves!</p>
-        <button class="key-button" value="Export" onclick="exportSaveData();">Export Save</button>
-        <button class="key-button" value="Import" onclick="importSaveData();">Import Save</button>
+        <button class="key-button" onclick="exportSaveData()">Export Save</button>
+        <button class="key-button" onclick="importSaveData()">Import Save</button>
       </div>
+
       <div class="settings-card">
         <h3>Information</h3>
-        <p>Version: v5.2.6</p>
-        <p id="last-updated">Last Updated: October 2nd, 2024</p>
-        <p>
-          Questions? Join our
-          <a href="https://discord.gg/interstellar">Discord community</a>,
-          email us at
-          <a href="mailto:hello@gointerstellar.app">hello@gointerstellar.app</a>, or
-          <a href="https://docs.gointerstellar.app/faq">check our FAQ</a>!
-        </p>
+        <p>Version: Borealis</p>
+        <p id="last-updated">Aurora interface</p>
+        <p>Built around the existing Borealis/Interstellar functionality.</p>
       </div>
+
     </div>
   </div>
+
   <script>
     window.addEventListener("load", () => {
-      navigator.serviceWorker.register("../sw.js?v=2025-04-15", {
-        scope: "/a/",
-      });
+      navigator.serviceWorker.register("../sw.js?v=2025-04-15", { scope: "/a/" });
     });
   </script>
   <script src="/assets/languagearts/sj.all.js?v=2025-04-15"></script>
@@ -247,18 +425,5 @@
   <script src="/assets/js/mg-pxy.js"></script>
   <script src="/assets/js/m1.js"></script>
   <script src="/assets/js/s1.js"></script>
-  <!-- DO NOT REMOVE-->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-WKJQ5QHQTJ"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag() {
-      dataLayer.push(arguments);
-    }
-    gtag("js", new Date());
-
-    gtag("config", "G-WKJQ5QHQTJ");
-  </script>
-  <!-- DO NOT REMOVE-->
 </body>
-
 </html>
