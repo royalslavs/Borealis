@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="referrer" content="no-referrer" />
@@ -8,12 +7,247 @@
   <meta http-equiv="X-Content-Type-Options" content="nosniff" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="shortcut icon" id="tab-favicon" href="favicon.png" />
-  <title id="t">Home</title>
+  <title id="t">Borealis Tabs</title>
   <link rel="stylesheet" href="/assets/css/global.css?v=6" />
   <link rel="stylesheet" href="/assets/css/t.css?v=02" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <style>
+    :root {
+      --aurora-bg: #050812;
+      --aurora-panel: rgba(10, 17, 30, .78);
+      --aurora-border: rgba(137, 211, 255, .16);
+      --aurora-text: #eef7ff;
+      --aurora-muted: #91a4b8;
+      --aurora-blue: #63b3ff;
+      --aurora-purple: #a78bfa;
+      --aurora-cyan: #61e7d8;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      color: var(--aurora-text);
+      font-family: Inter, "Segoe UI", system-ui, sans-serif;
+      background:
+        radial-gradient(850px 450px at 18% 0%, rgba(69, 174, 255, .15), transparent 65%),
+        radial-gradient(800px 500px at 82% 5%, rgba(170, 100, 255, .14), transparent 65%),
+        linear-gradient(180deg, #070c18, var(--aurora-bg));
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: -25%;
+      pointer-events: none;
+      background: linear-gradient(110deg, transparent 28%, rgba(79,210,255,.04) 44%, rgba(174,105,255,.07) 56%, transparent 72%);
+      filter: blur(40px);
+      transform: rotate(-7deg);
+      animation: aurora 14s ease-in-out infinite alternate;
+    }
+
+    @keyframes aurora {
+      from { transform: translateX(-2%) rotate(-7deg) scale(1); }
+      to { transform: translateX(3%) rotate(-3deg) scale(1.08); }
+    }
+
+    .nav {
+      position: fixed;
+      z-index: 200;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 48px;
+      padding: 7px 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-radius: 0 0 16px 16px;
+      background: rgba(7, 12, 23, .78);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--aurora-border);
+      box-shadow: 0 12px 35px rgba(0,0,0,.28);
+    }
+
+    #tab-list {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex: 1;
+      margin: 0;
+      padding: 0;
+      min-width: 0;
+      overflow-x: auto;
+      list-style: none;
+    }
+
+    #tab-list li {
+      flex: 0 1 auto;
+      min-width: 95px;
+      max-width: 220px;
+      height: 34px;
+      padding: 0 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      margin: 0;
+      border-radius: 10px;
+      color: var(--aurora-muted);
+      background: rgba(16, 26, 43, .62);
+      border: 1px solid rgba(137,211,255,.08);
+      transition: .2s ease;
+      white-space: nowrap;
+    }
+
+    #tab-list li:hover {
+      color: var(--aurora-text);
+      border-color: rgba(99,179,255,.25);
+      background: rgba(25, 39, 63, .72);
+    }
+
+    #tab-list li.active {
+      color: #fff;
+      background: linear-gradient(135deg, rgba(65,142,220,.34), rgba(142,87,224,.27));
+      border-color: rgba(99,179,255,.3);
+      box-shadow: 0 0 22px rgba(99,179,255,.08);
+    }
+
+    #add-tab {
+      width: 36px;
+      height: 34px;
+      margin: 0;
+      padding: 0;
+      flex: 0 0 auto;
+      border: 1px solid rgba(99,179,255,.16);
+      border-radius: 10px;
+      color: var(--aurora-text);
+      background: rgba(19, 31, 51, .72);
+      cursor: pointer;
+      transition: .2s ease;
+    }
+
+    #add-tab:hover {
+      transform: translateY(-1px);
+      border-color: rgba(99,179,255,.4);
+      box-shadow: 0 0 20px rgba(99,179,255,.1);
+    }
+
+    .nav-bar {
+      position: fixed;
+      z-index: 190;
+      top: 48px;
+      left: 0;
+      width: 100%;
+      height: 52px;
+      padding: 0 12px;
+      display: flex;
+      align-items: center;
+      background: rgba(7, 12, 23, .74);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border-bottom: 1px solid rgba(137,211,255,.1);
+    }
+
+    .nav-container {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .nav-left,
+    .nav-right {
+      position: static;
+      transform: none;
+      width: auto;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .nav-button {
+      width: 38px;
+      height: 36px;
+      margin: 0;
+      padding: 0;
+      border: 1px solid transparent;
+      border-radius: 10px;
+      color: var(--aurora-muted);
+      background: transparent;
+      transition: .2s ease;
+    }
+
+    .nav-button:hover {
+      color: #fff;
+      transform: translateY(-1px);
+      border-color: rgba(99,179,255,.2);
+      background: rgba(26, 41, 66, .7);
+    }
+
+    .navpost {
+      float: none;
+      margin: 0;
+      padding: 0;
+      width: min(55vw, 720px);
+    }
+
+    .bar {
+      width: 100%;
+      height: 36px;
+      margin: 0;
+      padding: 0 15px;
+      border: 1px solid rgba(137,211,255,.12);
+      border-radius: 11px;
+      color: var(--aurora-text);
+      background: rgba(3, 8, 18, .52);
+      outline: none;
+      transition: .2s ease;
+    }
+
+    .bar:focus {
+      background: rgba(5, 12, 24, .78);
+      border-color: rgba(99,179,255,.42);
+      box-shadow: 0 0 0 3px rgba(99,179,255,.08);
+    }
+
+    .frame-container {
+      position: absolute;
+      inset: 100px 0 0;
+      z-index: 1;
+    }
+
+    .frame-container iframe {
+      position: absolute;
+      display: none;
+      width: 100%;
+      height: 100%;
+      left: 0;
+      top: 0;
+      border: 0;
+    }
+
+    .frame-container iframe.active { display: block; }
+
+    @media (max-width: 700px) {
+      .nav-right .nav-button:nth-child(-n+2) { display: none; }
+      .navpost { width: min(52vw, 520px); }
+      #tab-list li { min-width: 80px; }
+    }
+  </style>
+
   <script>
-    window.addEventListener("resize", navigator.keyboard.lock(["Escape"]));
+    window.addEventListener("resize", () => {
+      if (navigator.keyboard && navigator.keyboard.lock) {
+        navigator.keyboard.lock(["Escape"]).catch(() => {});
+      }
+    });
   </script>
 </head>
 
@@ -24,6 +258,7 @@
       <i class="fa-solid fa-plus"></i>
     </button>
   </nav>
+
   <div class="nav-bar">
     <div class="nav-container">
       <div class="nav-left">
@@ -39,10 +274,12 @@
         <button title="Reload" onclick="reload()" class="nav-button">
           <i class="fa-solid fa-rotate-right"></i>
         </button>
+
         <form id="fv" class="navpost" method="POST">
           <input id="input" class="bar" placeholder="Search or enter a new URL" type="text" />
         </form>
       </div>
+
       <div class="nav-right">
         <button title="Fullscreen" id="fullscreen-button" class="nav-button nav-btn-right" onclick="FS()">
           <i class="fa-solid fa-expand"></i>
@@ -59,7 +296,9 @@
       </div>
     </div>
   </div>
+
   <div class="frame-container" id="frame-container"></div>
+
   <script src="assets/js/t3.js"></script>
   <script src="./assets/mathematics/bundle.js?v=2025-04-15"></script>
   <script src="./assets/mathematics/config.js?v=2025-04-15"></script>
@@ -67,18 +306,5 @@
   <script src="/assets/js/sj-tp.js?v=2025-04-15"></script>
   <script src="/assets/js/mg-pxy.js"></script>
   <script src="/assets/js/m1.js"></script>
-  <!-- DO NOT REMOVE-->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-WKJQ5QHQTJ"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag() {
-      dataLayer.push(arguments);
-    }
-    gtag("js", new Date());
-
-    gtag("config", "G-WKJQ5QHQTJ");
-  </script>
-  <!-- DO NOT REMOVE-->
 </body>
-
 </html>
